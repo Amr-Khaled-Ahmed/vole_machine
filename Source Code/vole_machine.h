@@ -14,8 +14,8 @@ private:
 public:
     Memory();  // Constructor
     ~Memory(); // Destructor
-    void set_memory_cells(int address,int value);
-    int get_memory_address(int address);
+    void set_memory_cells(int address,int value); // Set values on cells of memory
+    int get_memory_address(int address); // Get address of memory cells
 };
 
 // Registers class
