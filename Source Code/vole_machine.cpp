@@ -1,19 +1,36 @@
-#include "vole_machine.h"
-
-
+#include "vole_machice.h"
+#include<bits/stdc++.h>
+using namespace std;
 // Memory class implementation
-Memory::Memory() {
-    //cout << "Memory initialized." << endl;
+Memory::Memory() : memory(256, 0) {
+    cout << "Memory initialized with 256 cells."<<endl;
+}
+void Memory::set_memory_cells(int memory_address,int inside_value) {
+    if(memory_address>=0) {
+        if(memory_address<256) {
+            memory[memory_address] = inside_value;
+            cout<<"Memory set at "<<memory_address<<endl;
+        }
+    }
+    else {
+        cout<<"invalid address: "<<memory_address<<endl;
+    }
+}
+int Memory::get_memory_address(int memory_address) {
+    if(memory_address>=0) {
+        if(memory_address<256) {
+            return memory[memory_address];
+        }
+        else {
+            cout<<"invalid address: "<<memory_address<<endl;
+            return 0;
+        }
+    }
 }
 
 Memory::~Memory() {
-    //cout << "Memory destroyed." << endl;
+    cout << "Memory destroyed." << endl;
 }
-
-void Memory::loadMemory() {
-    //cout << "Loading memory..." << endl;
-}
-
 // Registers class implementation
 Registers::Registers() {
     //cout << "Registers initialized." << endl;
@@ -64,17 +81,14 @@ void slowPrint(const std::string& message, int delay) {
 }
 
 
-void startExcution() {
-    // Create objects for each class
+void start_excecution() {
     Memory memory;
+    memory.set_memory_cells(10, 42);
+    int memory_value = memory.get_memory_address(300);
     Registers registers;
-    Bytes bytes;
-    ProgIns progIns;
-
-    // Call methods on the objects
-    memory.loadMemory();
     registers.setRegisters();
+    Bytes bytes;
     bytes.manipulateBytes();
+    ProgIns progIns;
     progIns.executeInstructions();
-
 }
