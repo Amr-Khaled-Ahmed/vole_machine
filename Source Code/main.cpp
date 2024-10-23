@@ -1,4 +1,4 @@
-#include "vole_machice.h"
+#include "vole_machine.h"
 #include <iostream>
 #include <iomanip>
 using namespace std; // Add this line
