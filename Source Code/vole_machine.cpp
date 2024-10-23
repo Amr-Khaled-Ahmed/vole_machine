@@ -2,33 +2,33 @@
 #include<bits/stdc++.h>
 using namespace std;
 // Memory class implementation
-Memory::Memory() : memory(256, 0) {
+Memory::Memory() : memory(256, 0) { // make vector with 256 index and all are zeros
     cout << "Memory initialized with 256 cells."<<endl;
 }
 void Memory::set_memory_cells(int memory_address,int inside_value) {
-    if(memory_address>=0) {
-        if(memory_address<256) {
+    if(memory_address>=0) { // check if memory cell is greater than or equal to 0 or not
+        if(memory_address<256) { // check if memory cell is smaller than to 256 or not
             memory[memory_address] = inside_value;
             cout<<"Memory set at "<<memory_address<<endl;
         }
     }
     else {
-        cout<<"invalid address: "<<memory_address<<endl;
+        cout<<"invalid address: "<<memory_address<<endl; // invalid address
     }
 }
 int Memory::get_memory_address(int memory_address) {
-    if(memory_address>=0) {
-        if(memory_address<256) {
+    if(memory_address>=0) { // check if memory cell is greater than or equal to 0 or not
+        if(memory_address<256) { // check if memory cell is smaller than to 256 or not
             return memory[memory_address];
         }
         else {
-            cout<<"invalid address: "<<memory_address<<endl;
+            cout<<"invalid address: "<<memory_address<<endl; // invalid address
             return 0;
         }
     }
 }
 
-Memory::~Memory() {
+Memory::~Memory() { // Destructor to kill class
     cout << "Memory destroyed." << endl;
 }
 // Registers class implementation
