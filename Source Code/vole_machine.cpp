@@ -1,4 +1,4 @@
-#include "vole_machice.h"
+#include "vole_machine.h"
 #include<bits/stdc++.h>
 using namespace std;
 // Memory class implementation
