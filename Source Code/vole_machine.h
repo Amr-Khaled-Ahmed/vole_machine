@@ -4,7 +4,12 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include<vector>
+#include <vector>
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include <fstream>
+
 using namespace std;
 
 // Memory class
@@ -14,41 +19,56 @@ private:
 public:
     Memory();  // Constructor
     ~Memory(); // Destructor
-    void set_memory_cells(int address,int value); // Set values on cells of memory
+    void set_memory_cells(int address, int value); // Set values on cells of memory
     int get_memory_address(int address); // Get address of memory cells
 };
 
 // Registers class
 class Registers {
+private:
+    vector<int> registers; 
 public:
     Registers();  // Constructor
     ~Registers(); // Destructor
 
     // Methods related to registers
-    void setRegisters();
+    int getValue(int RegIndex);
+    void setValue(int RegIndex, int value);
+    void display();
 };
 
-// Bytes class
-class Bytes {
-public:
-    Bytes();  // Constructor
-    ~Bytes(); // Destructor
 
-    // Methods related to bytes
-    void manipulateBytes();
-};
 
 // Program Instructions class
 class ProgIns {
 public:
+    string instruction;
     ProgIns();  // Constructor
     ~ProgIns(); // Destructor
 
+    char getOpCode(); // Extract opcode
+    int getRegister(); // Extract register
+    int getAddress(); // Extract address/value
     // Methods related to program instructions
     void executeInstructions();
 };
 
-// Utility function to slow-print messages
+
+
+class Simulator {
+public:
+    Simulator(); // Constructor
+    void loadProgram(); // Load instructions into memory
+
+private:
+    Memory memory;    // Memory object
+    Registers registers; // Registers object
+    int ProgramCounter; // Program counter
+};
+
+
+
+// some functions 
 void slowPrint(const string& message, int delay = 50);
 void start_excecution();
 
