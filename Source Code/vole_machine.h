@@ -4,17 +4,18 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-
+#include<vector>
 using namespace std;
 
 // Memory class
 class Memory {
+private:
+    vector<int> memory;
 public:
     Memory();  // Constructor
     ~Memory(); // Destructor
-
-    // Methods related to memory
-    void loadMemory();
+    void set_memory_cells(int address,int value);
+    int get_memory_address(int address);
 };
 
 // Registers class
@@ -49,7 +50,7 @@ public:
 
 // Utility function to slow-print messages
 void slowPrint(const string& message, int delay = 50);
-void startExcution();
+void start_excecution();
 
 
 #endif
