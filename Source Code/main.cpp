@@ -1,4 +1,4 @@
-#include "vole_machine.h"
+#include "vole_machice.h"
 #include <iostream>
 #include <iomanip>
 using namespace std; // Add this line
@@ -16,7 +16,7 @@ int main() {
                 return 0;
             }
             else if (choice == "1") {
-                startExcution();
+                start_excecution();
                 cout << "Choose if you want to continue\n";
             }
             else {
@@ -27,8 +27,3 @@ int main() {
     }
 
 }
-
-
-
-
-
