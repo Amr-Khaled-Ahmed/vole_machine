@@ -34,7 +34,6 @@ Memory::~Memory() { // Destructor to kill class
 
 
 
-
 // Registers class implementation
 Registers::Registers() : registers(16, 0) {}
 int Registers::getValue(int RegIndex)
@@ -63,15 +62,16 @@ Registers::~Registers() {
 
 // ProgIns class implementation
 ProgIns::ProgIns(){
+    instruction = "0000";
     //cout << "Program instructions initialized." << endl;
 }
 char ProgIns::getOpCode() {
-    return instruction[0]; // First char is opcode
+    return toupper(instruction[0]); // First char is opcode
 }
 int ProgIns::getRegister() {
     return stoi(instruction.substr(1, 1), nullptr, 16); // Second char is the register
 }
-int ProgIns::getAddress() {
+int ProgIns::getAddress_Value() {
     return stoi(instruction.substr(2, 2), nullptr, 16); // Last two chars represent the address /or/ the value
 }
 void ProgIns::executeInstructions() {
@@ -112,24 +112,57 @@ void Simulator::loadProgram() {
             // Check if the file opened successfully
             if (!ProgramFile) {
                 cerr << "Error: File does not exist or cannot be opened: " << ProgramName << endl; // Display error message
+                continue;
             }
-            else {
-                // Read and display each line from the text file
-                string line;
-                while (getline(ProgramFile, line)) {
-                    cout << line << endl; // Print the machine code line by line
+            // Read and display each line from the text file
+            string line;
+            Registers regs;
+            ProgIns Ins;
+            while (getline(ProgramFile, line)) {
+                Ins.instruction = line;
+                if (Ins.getOpCode() == '1') {
+                    cout << "ins 1\n";
+
                 }
-                ProgramFile.close(); // Close the file after processing
-                break; // Exit the loop after processing
+                else if (Ins.getOpCode() == '2') {
+                    regs.setValue(Ins.getRegister(), Ins.getAddress_Value());
+                    //done
+                }
+                else if (Ins.getOpCode() == '3') {
+                    cout << "ins 3\n";
+
+                }
+                else if (Ins.getOpCode() == '4') {
+                    // 4023 would cause the contents of register 2 to be copied into register 3.
+                    regs.setValue(stoi(string(1, Ins.instruction[3]), nullptr, 16), regs.getValue(stoi(string(1, Ins.instruction[2]), nullptr, 16)) );
+                    // done
+                }
+                else if (Ins.getOpCode() == '5') {
+                    // Example: 5726 would cause the binary values in registers 2 and 6 to be added and the sum placed in register 7.
+                    float value1 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[2]), nullptr, 16)));
+                    float value2 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[3]), nullptr, 16)));
+                    float sum = value1 + value2; // Adding the two floating-point values
+                    registers.setValue(stoi(string(1, Ins.instruction[1]), nullptr, 16), *reinterpret_cast<int*>(&sum)); // Store the float as binary in the register
+                }
+                else if (Ins.getOpCode() == '6') {
+                    // 6726 would cause the binary values in registers 2 and 6 to be subtracted and the result placed in register 7, IEEE 754 floating-point representation.
+                    float value1 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[2]), nullptr, 16)));
+                    float value2 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[3]), nullptr, 16)));
+                    float difference = value1 - value2; // Subtracting the two floating-point values
+                    registers.setValue(stoi(string(1, Ins.instruction[1]), nullptr, 16), *reinterpret_cast<int*>(&difference)); // Store the float as binary in the register
+                }
+                else if (Ins.getOpCode() == 'B') {
+                    cout << "ins 7\n";
+
+                }
+                else if (Ins.getOpCode() == 'C') {
+                    cout << "ins 8\n";
+
+                }
             }
-        }
-        else if (extension == ".o") { // Read Object File
-            cout << "this is object file commands" << endl;
-
-
-        }
-        else if (extension == ".exe") { // Read Executable File
-            cout << "this is exe file commands" << endl;
+            regs.display();
+            ProgramFile.close(); // Close the file after processing
+            break; // Exit the loop after processing
         }
     }
 }
@@ -149,14 +182,17 @@ void slowPrint(const string& message, int delay) {
 
 void start_excecution() {
     Memory memory;
+    Simulator s;
+    ProgIns progIns;
+    Registers registers;
+
+
+
+
     memory.set_memory_cells(10, 42);
     int memory_value = memory.get_memory_address(300);
-    Registers registers;
-    registers.display();
-    ProgIns progIns;
-    Simulator s;
     s.loadProgram();
+//    registers.display();
     progIns.executeInstructions();
 }
-
 
