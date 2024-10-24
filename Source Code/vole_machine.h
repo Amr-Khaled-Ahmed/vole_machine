@@ -26,7 +26,7 @@ public:
 // Registers class
 class Registers {
 private:
-    vector<int> registers; 
+    vector<int> registers;
 public:
     Registers();  // Constructor
     ~Registers(); // Destructor
@@ -41,14 +41,17 @@ public:
 
 // Program Instructions class
 class ProgIns {
+
 public:
     string instruction;
+
     ProgIns();  // Constructor
     ~ProgIns(); // Destructor
 
     char getOpCode(); // Extract opcode
     int getRegister(); // Extract register
-    int getAddress(); // Extract address/value
+    int getAddress_Value(); // Extract address/value
+
     // Methods related to program instructions
     void executeInstructions();
 };
@@ -68,7 +71,7 @@ private:
 
 
 
-// some functions 
+// some functions
 void slowPrint(const string& message, int delay = 50);
 void start_excecution();
 
