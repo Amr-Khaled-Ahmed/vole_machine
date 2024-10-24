@@ -1,7 +1,4 @@
 #include "vole_machine.h"
-#include <iostream>
-#include <iomanip>
-using namespace std; // Add this line
 int main() {
     // Slow-print a welcome message
     slowPrint("--\"Welcome to Our Vole Machine\"--", 0);
