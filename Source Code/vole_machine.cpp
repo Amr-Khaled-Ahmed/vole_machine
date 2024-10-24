@@ -1,7 +1,6 @@
 #include "vole_machine.h"
 
 
-using namespace std;
 // Memory class implementation
 Memory::Memory() : memory(256, 0) { // make vector with 256 index and all are zeros
     cout << "Memory initialized with 256 cells." << endl;
