@@ -1,24 +1,53 @@
 #include "vole_machine.h"
-
-void printIEEE754(float num) {
-    uint32_t binaryRepresentation = 0;
-    // Copy the bytes of the float into the integer
-    memcpy(&binaryRepresentation, &num, sizeof(num)); // Copy the bytes on the raw of the float num into binaryRepresentation
-    //binaryRepresentation holds the exact bitwise structure of num now
-    // Use bitset to print the representation
-    bitset<32> bits(binaryRepresentation);
-    cout << "Sign: " << bits[31] << endl;
-    cout << "Exponent: " << bits.to_string().substr(1, 8) << endl;
-    cout << "Mantissa: " << bits.to_string().substr(9) << endl;
-    cout << "IEEE 754 Representation: " << bits << endl;
-}
 // Function that convert float number that can be positive or negative to IEEE754 representation
-float float_IEEE754(float num){
-    float binaryRepresentation = 0;
-    // Copy the bytes of the float into the integer
-    memcpy(&binaryRepresentation, &num, sizeof(num)); // Copy the bytes on the raw of the float num into binaryRepresentation
-    //binaryRepresentation holds the exact bitwise structure of num now
-    return binaryRepresentation;
+void printIEEE754(float num) {
+    uint8_t binaryRepresentation = 0; // Initialize an 8-bit variable to store the final binary representation
+
+    // Step 1: Copy the bytes of the float into a 32-bit integer
+    uint32_t temp = 0; 
+    memcpy(&temp, &num, sizeof(num)); // Copy the raw byte structure of the float into a 32-bit integer variable
+
+    // Step 2: Extract the sign, exponent, and mantissa
+    uint8_t sign = (temp >> 31) & 0x1; // Extract the sign bit (left-most bit in a 32-bit float)
+    int8_t exponent = ((temp >> 23) & 0xFF) - 127; // Extract and un-bias the 8-bit exponent field (32-bit float has a bias of 127)
+    uint8_t mantissa = (temp >> 19) & 0xF; // Extract the first 4 bits of the mantissa for an 8-bit representation
+
+    // Step 3: Adjust exponent for 8-bit representation (new bias is 3)
+    exponent += 3; // Re-bias the exponent to fit within 8-bit format (bias of 3 for 3-bit exponent field)
+    if (exponent < 0) exponent = 0; // Clamp exponent to 0 if it's too small
+    if (exponent > 7) exponent = 7; // Clamp exponent to 7 if it's too large for 3 bits
+
+    // Step 4: Construct the 8-bit representation
+    binaryRepresentation = (sign << 7) | (exponent << 4) | mantissa; // Combine sign, exponent, and mantissa into a single 8-bit variable
+
+    // Step 5: Print the result using bitset
+    bitset<8> bits(binaryRepresentation); // Convert 8-bit representation to a bitset for easy printing
+    cout << "Sign: " << bits[7] << endl; // Print sign bit
+    cout << "Exponent: " << bits.to_string().substr(1, 3) << endl; // Print exponent bits (3 bits)
+    cout << "Mantissa: " << bits.to_string().substr(4) << endl; // Print mantissa bits (4 bits)
+    cout << "8-bit IEEE 754 Representation: " << bits << endl; // Print the entire 8-bit IEEE 754 representation
+}
+
+float float_IEEE754(float num) {
+    uint8_t binaryRepresentation = 0; // Initialize an 8-bit variable to store the binary representation
+    uint32_t temp = 0; 
+
+    // Copy the bytes of the float into a 32-bit integer
+    memcpy(&temp, &num, sizeof(num)); // Copy raw bytes of the float into a 32-bit integer
+
+    // Extract the sign, exponent, and mantissa with same method
+    uint8_t sign = (temp >> 31) & 0x1; // Extract sign bit
+    int8_t exponent = ((temp >> 23) & 0xFF) - 127; // Extract and un-bias exponent from the 32-bit float
+    uint8_t mantissa = (temp >> 19) & 0xF; // Extract the first 4 bits of the mantissa
+
+    // Adjust for 8-bit
+    exponent += 3; // Re-bias exponent to fit 3-bit format (bias of 3)
+    if (exponent < 0) exponent = 0; // Clamp exponent to 0 if it's too low
+    if (exponent > 7) exponent = 7; // Clamp exponent to 7 if it's too high
+
+    // Construct 8-bit representation
+    binaryRepresentation = (sign << 7) | (exponent << 4) | mantissa; // Combine into a single 8-bit binary representation
+    return binaryRepresentation; // Return the final 8-bit representation as a float
 }
 
 //Memory class implementation
