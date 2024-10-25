@@ -12,35 +12,38 @@
 #include<bitset>
 using namespace std;
 void printIEEE754(float num);
-float float_IEEE754(float num);
+int float_IEEE754(float num);
+
 // Memory class
+
 class Memory {
 private:
-    vector<int> memory;
+    vector<uint8_t> memory; // Store memory as 8-bit cells
 public:
-    Memory();  // Constructor
-    ~Memory(); // Destructor
-    void set_memory_cells(int address, int value); // Set values on cells of memory
-    int get_memory_address(int address); // Get address of memory cells
+    Memory();
+    void set_memory_cells(int memory_address, int inside_value);
+    int get_memory_address(int memory_address);
     void display_memory_cells();
+    ~Memory();
 };
 
 // Registers class
 class Registers {
 private:
-    vector<int> registers;
+    vector<int> registers; // Store register values
 public:
-    Registers();  // Constructor
-    ~Registers(); // Destructor
-
-    // Methods related to registers
+    Registers();
     int getValue(int RegIndex);
     void setValue(int RegIndex, int value);
-    void display();
     vector<int> get_registers_vector();
+    void display();
+    int getRegister_0();
+    void loadFromMemory(Memory &memory, int memory_address, int regIndex); // Load from memory to register
+    void storeToMemory(Memory &memory, int regIndex, int memory_address); // Store register value to memory
+    ~Registers();
+
+
 };
-
-
 
 // Program Instructions class
 class ProgIns {
