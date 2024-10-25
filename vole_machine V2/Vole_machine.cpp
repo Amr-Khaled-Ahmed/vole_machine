@@ -4,13 +4,13 @@ void printIEEE754(float num) {
     uint8_t binaryRepresentation = 0; // Initialize an 8-bit variable to store the final binary representation
 
     // Step 1: Copy the bytes of the float into a 32-bit integer
-    uint32_t temp = 0; 
+    uint32_t temp = 0;
     memcpy(&temp, &num, sizeof(num)); // Copy the raw byte structure of the float into a 32-bit integer variable
 
     // Step 2: Extract the sign, exponent, and mantissa
-    uint8_t sign = (temp >> 31) & 0x1; // Extract the sign bit (left-most bit in a 32-bit float)
-    int8_t exponent = ((temp >> 23) & 0xFF) - 127; // Extract and un-bias the 8-bit exponent field (32-bit float has a bias of 127)
-    uint8_t mantissa = (temp >> 19) & 0xF; // Extract the first 4 bits of the mantissa for an 8-bit representation
+    uint8_t sign = (temp >> 31) & 1; // Extract the sign bit (left-most bit in a 32-bit float)
+    int8_t exponent = ((temp >> 23) & 255) - 127; // Extract and un-bias the 8-bit exponent field (32-bit float has a bias of 127)
+    uint8_t mantissa = (temp >> 19) & 15; // Keep the first 4 bits of mantissa for 8-bit precision
 
     // Step 3: Adjust exponent for 8-bit representation (new bias is 3)
     exponent += 3; // Re-bias the exponent to fit within 8-bit format (bias of 3 for 3-bit exponent field)
@@ -30,15 +30,15 @@ void printIEEE754(float num) {
 
 float float_IEEE754(float num) {
     uint8_t binaryRepresentation = 0; // Initialize an 8-bit variable to store the binary representation
-    uint32_t temp = 0; 
+    uint32_t temp = 0;
 
     // Copy the bytes of the float into a 32-bit integer
     memcpy(&temp, &num, sizeof(num)); // Copy raw bytes of the float into a 32-bit integer
 
     // Extract the sign, exponent, and mantissa with same method
-    uint8_t sign = (temp >> 31) & 0x1; // Extract sign bit
-    int8_t exponent = ((temp >> 23) & 0xFF) - 127; // Extract and un-bias exponent from the 32-bit float
-    uint8_t mantissa = (temp >> 19) & 0xF; // Extract the first 4 bits of the mantissa
+    uint8_t sign = (temp >> 31) & 1; // Extract sign bit
+    int8_t exponent = ((temp >> 23) & 255) - 127; // Extract and un-bias exponent from the 32-bit float
+    uint8_t mantissa = (temp >> 19) & 15; // Extract the first 4 bits of the mantissa
 
     // Adjust for 8-bit
     exponent += 3; // Re-bias exponent to fit 3-bit format (bias of 3)
@@ -49,7 +49,6 @@ float float_IEEE754(float num) {
     binaryRepresentation = (sign << 7) | (exponent << 4) | mantissa; // Combine into a single 8-bit binary representation
     return binaryRepresentation; // Return the final 8-bit representation as a float
 }
-
 //Memory class implementation
 Memory::Memory() : memory(256, 0)
 { // Initialize vector with 256 cells, all set to 0
