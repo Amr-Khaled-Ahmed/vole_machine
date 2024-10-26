@@ -13,7 +13,7 @@ int main() {
                 return 0;
             }
             else if (choice == "1") {
-                start_excecution();
+                start_execution();
                 cout << "Choose if you want to continue\n";
             }
             else {
@@ -23,7 +23,10 @@ int main() {
         } while (choice != "2" || choice != "1");
     }
 
-    //int R = stoi(line.substr(1, 1), nullptr, 16); // Extract the register index R
-    /**int XY = stoi(line.substr(2, 2), nullptr, 16); // Extract the memory address XY
-    regs.setValue(R, memory.get_memory_address(XY)); // Set register R with value from memory address XY**/
+
+
+
+
+
+
 }
