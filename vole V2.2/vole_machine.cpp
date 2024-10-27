@@ -125,7 +125,16 @@ void Simulator::loadProgram() {
             cout<<endl;
             cout<<"--------------------------------"<<endl;
             cout<<"Operation which as made by ALU"<<endl;
+
+
             while (getline(ProgramFile, line)){
+                if (line.size() != 4 || !isxdigit(line[0]) || !isxdigit(line[1]) ||
+                    !isxdigit(line[2]) || !isxdigit(line[3])) {
+                    cout << "Unknown operation code: " << line << endl;
+                    continue;
+                }
+
+
                 Ins.instruction = line;
                 if (Ins.getOpCode_from_ins() == '1') { // LOAD the register R with the bit pattern found in the memory cell whose address is XY.
                     int R = Ins.getRegister_from_ins(); // Extract the register index R
@@ -216,11 +225,16 @@ void Simulator::loadProgram() {
                     if (targetValue == compareValue) {
                         ProgramCounter = memAddr; // Set the program counter to the target memory address
                     }
-                    cout<<"Program counter now is: "<<hex<<ProgramCounter<<endl;
+                    cout << "Program counter now is: " << hex << ProgramCounter << endl;
                 }
                 else if (Ins.getOpCode_from_ins() == 'C') { // HALT program
-                    cout << "HALT" << endl;
-                    break;
+                    line[0] = toupper(line[0]);
+                    if (line == "C000"){
+                        cout << "HALT" << endl;
+                        break;
+                    }else{
+                        cout << "Unknown operation code: " << line << endl;
+                    }
                 }
                 else{
                     cout << "Unknown operation code: " << Ins.getOpCode_from_ins() << endl;
