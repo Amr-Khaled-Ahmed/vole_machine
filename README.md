@@ -28,9 +28,7 @@ The **Vole Machine Simulator** is a custom virtual machine capable of executing 
 | `A RXY`| Compare| Set a flag if register `R` holds a value equal to memory location `XY`; otherwise, clear the flag.   |
 | `B RXY`| Jump   | Jump to the instruction at address `XY` if the value in register `R` equals zero.                    |
 | `C 000`| Halt   | Stop the execution of the simulator.                                                                 |
-| `D RXY`| And    | Perform bitwise AND between register `R` and memory value at `XY`, storing the result in `R`.        |
-| `E RXY`| Or     | Perform bitwise OR between register `R` and memory value at `XY`, storing the result in `R`.         |
-| `F RXY`| Not    | Perform bitwise NOT on the value in register `R`, storing the result in `R`.                         |
+
 
 ## Installation
 To get started with the Vole Machine Simulator:
