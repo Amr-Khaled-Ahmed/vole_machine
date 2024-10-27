@@ -6,8 +6,8 @@ int main() {
         string choice;
         do {
             cout << "Choose\n"
-                << "1 - To load a new program\n"
-                << "2 - To exit\n";
+                 << "1 - To load a new program\n"
+                 << "2 - To exit\n";
             cin >> choice;
             if (choice == "2") {
                 return 0;
@@ -22,11 +22,6 @@ int main() {
 
         } while (choice != "2" || choice != "1");
     }
-
-
-
-
-
 
 
 }
