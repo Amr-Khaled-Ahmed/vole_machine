@@ -25,11 +25,9 @@ private:
     vector<int> registers; // Store register values
 public:
     Registers();
-    int getValue(int regIndex); // Get value from a register
-    void setValue(int regIndex, int value); // Set value in a register
-    vector<int> get_registers_vector(); // Get all register values
-    void display(); // Display register contents
-    int getRegister_0(); // Get value of register 0
+    int Get_Register_Value(int regIndex); // Get value from a register
+    void setValue_to_register(int regIndex, int value); // Set value in a register
+    void display_Registers(); // Display register contents
     ~Registers();
 };
 
@@ -53,9 +51,9 @@ public:
     ProgIns();  // Constructor
     ~ProgIns(); // Destructor
 
-    char getOpCode(); // Extract opcode
-    int getRegister(); // Extract register index
-    int getAddress_Value(); // Extract address/value
+    char getOpCode_from_ins(); // Extract opcode
+    int getRegister_from_ins(); // Extract register index
+    int getAddress_Value_from_ins(); // Extract address/value
 
     // Method to execute program instructions
     void executeInstructions();
