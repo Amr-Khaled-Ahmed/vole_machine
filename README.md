@@ -1,34 +1,41 @@
 # Vole Machine Simulator
 
-## Project Overview
-This project aims to develop a **Vole Machine Simulator** that can execute a set of machine instructions as defined by a custom instruction set architecture (ISA). The simulator will be capable of loading programs from a file and executing them based on the opcodes provided.
+## Overview
+The **Vole Machine Simulator** is a custom virtual machine capable of executing a predefined set of instructions defined by a unique instruction set architecture (ISA). This simulator can load programs from files and execute them based on the provided opcodes, allowing users to emulate machine-level operations.
 
-## Features (Planned)
-- **Memory Management**: The simulator will include a memory model to store instructions and data.
-- **Registers**: It will simulate 16 general-purpose registers, each holding an 8-bit value.
-- **Instruction Set Support**: The machine will support a variety of instructions including:
-  - **Load**: Load values from memory or constants into registers.
-  - **Store**: Store register values into memory.
-  - **Move**: Transfer values between registers.
-  - **Arithmetic Operations**: Perform addition in two's complement and floating-point formats.
-  - **Jump**: Conditional program jumps based on comparisons.
-  - **Halt**: Stop execution.
+## Features
+- **Memory Management**: The simulator includes a memory model for storing instructions and data.
+- **Registers**: Supports 16 general-purpose 8-bit registers for flexible data manipulation.
+- **Comprehensive Instruction Set**: Executes operations such as:
+  - **Load, Store, Move**: Basic data manipulation between memory and registers.
+  - **Arithmetic**: Supports addition, floating-point addition, subtraction, multiplication, and division.
+  - **Jumping**: Conditional branching based on comparison operations.
+  - **Bitwise Operations**: Supports AND, OR, and NOT for binary data manipulation.
+  - **Halt**: Cleanly terminates program execution.
 
-## Instruction Set (Summary)
-| Opcode | Description                                                                 |
-|--------|-----------------------------------------------------------------------------|
-| 1 RXY  | Load the register `R` with the bit pattern from memory location `XY`.       |
-| 2 RXY  | Load the register `R` with the constant `XY`.                               |
-| 3 RXY  | Store the bit pattern from register `R` into memory location `XY`.          |
-| 4 0RS  | Move the bit pattern from register `R` to register `S`.                     |
-| 5 RST  | Add values from registers `S` and `T` and store the result in register `R`. |
-| 6 RST  | Perform floating-point addition of registers `S` and `T`, result in `R`.    |
-| B RXY  | Jump to instruction at address `XY` if register `R` equals register `0`.    |
-| C 000  | Halt execution.                                                             |
+## Instruction Set
+| Opcode | Format | Description                                                                                          |
+|--------|--------|------------------------------------------------------------------------------------------------------|
+| `1 RXY`| Load   | Load register `R` with the 8-bit value from memory location `XY`.                                    |
+| `2 RXY`| Load   | Load register `R` with the constant 8-bit value `XY`.                                                |
+| `3 RXY`| Store  | Store the 8-bit value in register `R` to memory location `XY`.                                       |
+| `4 0RS`| Move   | Copy the 8-bit value from register `R` to register `S`.                                              |
+| `5 RST`| Add    | Add the values of registers `S` and `T`, storing the result in register `R`.                         |
+| `6 RST`| FAdd   | Perform floating-point addition of registers `S` and `T`, storing the result in `R`.                 |
+| `7 RST`| Subtract | Subtract the value in register `T` from register `S` and store the result in register `R`.        |
+| `8 RST`| Multiply | Multiply values in registers `S` and `T` and store the result in register `R`.                     |
+| `9 RST`| Divide | Divide the value in register `S` by the value in register `T`, storing the result in register `R`.   |
+| `A RXY`| Compare| Set a flag if register `R` holds a value equal to memory location `XY`; otherwise, clear the flag.   |
+| `B RXY`| Jump   | Jump to the instruction at address `XY` if the value in register `R` equals zero.                    |
+| `C 000`| Halt   | Stop the execution of the simulator.                                                                 |
+| `D RXY`| And    | Perform bitwise AND between register `R` and memory value at `XY`, storing the result in `R`.        |
+| `E RXY`| Or     | Perform bitwise OR between register `R` and memory value at `XY`, storing the result in `R`.         |
+| `F RXY`| Not    | Perform bitwise NOT on the value in register `R`, storing the result in `R`.                         |
 
 ## Installation
 To get started with the Vole Machine Simulator:
 
-1. **Clone the repository**:
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/mohamedahmed2005/vole-machine-simulator.git
+   cd vole-machine-simulator
