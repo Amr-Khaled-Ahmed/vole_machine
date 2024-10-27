@@ -104,11 +104,12 @@ void Simulator::loadProgram() {
     ifstream ProgramFile; // Create an input file stream
 
     while (true) {
-        cout << "Enter the file name (with extension): ";
+        cout << "Enter the file name (with extension \".txt\" : ";
         cin >> ProgramName;
         size_t dotPos = ProgramName.find_last_of('.');
         if (dotPos != string::npos) {
             extension = ProgramName.substr(dotPos);
+
         } else {
             cout << "Invalid file name. Please include a file extension." << endl;
             continue;
@@ -122,9 +123,9 @@ void Simulator::loadProgram() {
             }
             string line;
             ProgIns Ins;
-            cout<<endl;
-            cout<<"--------------------------------"<<endl;
-            cout<<"Operation which as made by ALU"<<endl;
+
+            cout << endl << "Operation which as made by ALU" <<endl;
+            cout << endl << setw(50) << setfill('-') << " " << endl;
 
 
             while (getline(ProgramFile, line)){
@@ -240,14 +241,36 @@ void Simulator::loadProgram() {
                     cout << "Unknown operation code: " << Ins.getOpCode_from_ins() << endl;
                 }
             }
-            cout<<"--------------------------------"<<endl;
-            cout<<"Registers"<<endl;
-            registers.display_Registers();
-            cout<<"--------------------------------"<<endl;
-            cout<<"Memory cells"<<endl;
-            memory.display_memory_cells();
-            ProgramFile.close();
+            cout << "Do you want to show the memory:\n" << endl;
+            string choice;
+            cout << "Registers" << endl;
+            cout << setw(50) << setfill('-') << " " << endl;
+            registers.display_Registers();  // Assuming this displays register info
+            cout << endl << endl;
+            do {
+
+                cout << "1. Show the memory";
+                cout << "\n2. Choose another program";
+                cout << "\nEnter your choice: ";
+                cin >> choice;
+
+                if (choice == "1") {
+                    cout << "Memory cells" << endl;
+                    cout << setw(50) << setfill('-') << " " << endl;
+                    memory.display_memory_cells();  // Assuming this displays memory cells
+                } else if (choice == "2") {
+                    cout << "Exiting Current program." << endl;
+                    ProgramFile.close();  // Close the program file once the loop exits
+                    break;
+                }else{
+                    cerr << "Invalid choice. Please enter 1 or 2." << endl;
+                }
+            } while (choice != "2");
+            ProgramFile.close();  // Close the program file once the loop exits
             break;
+
+        }else{
+            cerr << "Error: File does not exist or is not a text file: " << ProgramName << endl;
         }
     }
 }
