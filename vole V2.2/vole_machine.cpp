@@ -26,7 +26,7 @@ Memory::Memory() : memory(256, 0) {}
 
 
 void Memory::set_memory_cells(int memory_address, int value) {
-        memory[memory_address] = value;
+    memory[memory_address] = value & 0xff;
 }
 int Memory::get_memory_address(int memory_address) {
     if (memory_address >= 0 && memory_address < 256) {
@@ -47,20 +47,18 @@ Memory::~Memory() {} // Destructor class
 // Registers class implementation
 Registers::Registers() : registers(16, 0) {}
 
-int Registers::getValue(int RegIndex)
+int Registers::Get_Register_Value(int RegIndex)
 {
     return registers[RegIndex];
 }
-void Registers::setValue(int RegIndex, int value)
+void Registers::setValue_to_register(int RegIndex, int value)
 {
-    registers[RegIndex] = (value&0xff);
+    registers[RegIndex] = (value & 0xff);
 }
 
-vector<int> Registers::get_registers_vector() {
-    return registers;
-}
 
-void Registers::display() {
+
+void Registers::display_Registers() {
     for (int i = 0; i < 16; ++i) {
         cout << "R" << i << ": " << hex << setw(2) << setfill('0') << registers[i] << "  |  ";
         if (i % 4 == 3) {
@@ -69,9 +67,6 @@ void Registers::display() {
     }
 }
 
-int Registers::getRegister_0() {
-    return registers[0];
-}
 
 Registers::~Registers() {}
 
@@ -83,13 +78,13 @@ ProgIns::ProgIns(){
     instruction = "0000";
     //cout << "Program instructions initialized." << endl;
 }
-char ProgIns::getOpCode() {
+char ProgIns::getOpCode_from_ins() {
     return toupper(instruction[0]); // First char is opcode
 }
-int ProgIns::getRegister() {
+int ProgIns::getRegister_from_ins() {
     return stoi(instruction.substr(1, 1), nullptr, 16); // Second char is the register
 }
-int ProgIns::getAddress_Value() {
+int ProgIns::getAddress_Value_from_ins() {
     return stoi(instruction.substr(2, 2), nullptr, 16); // Last two chars represent the address /or/ the value
 }
 void ProgIns::executeInstructions() {
@@ -132,23 +127,23 @@ void Simulator::loadProgram() {
             cout<<"Operation which as made by ALU"<<endl;
             while (getline(ProgramFile, line)){
                 Ins.instruction = line;
-                if (Ins.getOpCode() == '1') { // LOAD the register R with the bit pattern found in the memory cell whose address is XY.
-                    int R = Ins.getRegister(); // Extract the register index R
-                    int XY = Ins.getAddress_Value(); // Extract the memory address XY
+                if (Ins.getOpCode_from_ins() == '1') { // LOAD the register R with the bit pattern found in the memory cell whose address is XY.
+                    int R = Ins.getRegister_from_ins(); // Extract the register index R
+                    int XY = Ins.getAddress_Value_from_ins(); // Extract the memory address XY
                     int valueFromMemory = memory.get_memory_address(XY); // get value from memory
-                    registers.setValue(R, valueFromMemory);
+                    registers.setValue_to_register(R, valueFromMemory);
                     cout << "Loaded value " << hex << valueFromMemory << " from memory address " << hex << XY << " into register R" << R << endl;
                 }
-                else if (Ins.getOpCode() == '2') { //LOAD the register R with the bit pattern XY.
-                    int R = Ins.getRegister(); // Extract the register index R
-                    int XY = Ins.getAddress_Value(); // Extract the immediate value XY
-                    registers.setValue(R, XY); // load register with value of XY
+                else if (Ins.getOpCode_from_ins() == '2') { //LOAD the register R with the bit pattern XY.
+                    int R = Ins.getRegister_from_ins(); // Extract the register index R
+                    int XY = Ins.getAddress_Value_from_ins(); // Extract the immediate value XY
+                    registers.setValue_to_register(R, XY); // load register with value of XY
                     cout << "Loaded immediate value " << hex << XY << " into register R" << R << endl;
                 }
-                else if (Ins.getOpCode() == '3') { //STORE the bit pattern found in register R in the memory cell whose address is XY.
-                    int R = Ins.getRegister(); // Extract the register index R
-                    int XY = Ins.getAddress_Value(); // Extract the memory address XY
-                    int valueToStore = registers.getValue(R);
+                else if (Ins.getOpCode_from_ins() == '3') { //STORE the bit pattern found in register R in the memory cell whose address is XY.
+                    int R = Ins.getRegister_from_ins(); // Extract the register index R
+                    int XY = Ins.getAddress_Value_from_ins(); // Extract the memory address XY
+                    int valueToStore = registers.Get_Register_Value(R);
                     // Check if the address is 00 (special case for screen)
                     if (XY == 0) {
                         cout << "Writing value " << hex << valueToStore << " to screen." << endl;
@@ -159,72 +154,88 @@ void Simulator::loadProgram() {
                         cout << "Stored value " << hex << valueToStore << " from register R" << R << " to memory address " << hex << XY << endl;
                     }
                 }
-                else if (Ins.getOpCode() == '4') { //MOVE the bit pattern found in register R to register S.
-                    registers.setValue(stoi(string(1, Ins.instruction[3]), nullptr, 16), registers.getValue(stoi(string(1, Ins.instruction[2]), nullptr, 16)));
+                else if (Ins.getOpCode_from_ins() == '4') { //MOVE the bit pattern found in register R to register S.
+                    registers.setValue_to_register(stoi(string(1, Ins.instruction[3]), nullptr, 16),
+                                                   registers.Get_Register_Value(
+                                                           stoi(string(1, Ins.instruction[2]), nullptr, 16)));
                 }
-                else if (Ins.getOpCode() == '5') {
-                    /*ADD the bit patterns in registers S and T as though they were two’s complement representations
+                else if (Ins.getOpCode_from_ins() == '5') {
+                    /*ADD the bit patterns in registers S and T as though they were twoâ€™s complement representations
                       and leave the result in register R.
                     */
                     int sourceReg1 = stoi(string(1, Ins.instruction[2]), nullptr, 16);
                     int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
                     int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
                     cout << "Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
-                    int value1 = registers.getValue(sourceReg1);
-                    int value2 = registers.getValue(sourceReg2);
+                    int value1 = registers.Get_Register_Value(sourceReg1);
+                    int value2 = registers.Get_Register_Value(sourceReg2);
                     int result = value1 + value2;
                     if ((value1 > 0 && value2 > 0 && result < 0) || (value1 < 0 && value2 < 0 && result > 0)) {
                         cout << "Overflow occurred during addition!" << endl;
                     }
-                    registers.setValue(destReg, result);
+                    registers.setValue_to_register(destReg, result);
                     cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
                 }
-                else if (Ins.getOpCode() == '6') {
+                else if (Ins.getOpCode_from_ins() == '6') {
                     /*ADD the bit patterns in registers S and T as though they represented values in floating-point
                       notation and leave the floating-point result in register R.
                     */
-                    int regIndexResult = Ins.getRegister();
-                    float value1 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[2]), nullptr, 16)));
-                    float value2 = static_cast<float>(registers.getValue(stoi(string(1, Ins.instruction[3]), nullptr, 16)));
+                    int regIndexResult = Ins.getRegister_from_ins();
+                    float value1 = static_cast<float>(registers.Get_Register_Value(
+                            stoi(string(1, Ins.instruction[2]), nullptr, 16)));
+                    float value2 = static_cast<float>(registers.Get_Register_Value(
+                            stoi(string(1, Ins.instruction[3]), nullptr, 16)));
                     float sum_floating = value1 + value2;
-                    registers.setValue(regIndexResult, float_IEEE754(sum_floating)); // Store as binary
+                    registers.setValue_to_register(regIndexResult, float_IEEE754(sum_floating)); // Store as binary
                 }
-                else if (Ins.getOpCode() == 'B') {
+                else if (Ins.getOpCode_from_ins() == '7') {
+
+                }
+                else if (Ins.getOpCode_from_ins() == '8') {
+
+                }
+                else if (Ins.getOpCode_from_ins() == '9') {
+
+                }
+                else if (Ins.getOpCode_from_ins() == 'A') {
+
+                }
+                else if (Ins.getOpCode_from_ins() == 'B') {
                     /**
                     JUMP to the instruction located in the memory cell at address XY if the bit pattern in register R
                     is equal to the bit pattern in register number 0. Otherwise, continue with the normal sequence of
                     execution. (The jump is implemented by copying XY into the program counter during the execute phase.)
                     **/
-                    int R = Ins.getRegister();
-                    int XY = Ins.getAddress_Value();
-                    memory.set_memory_cells(XY, registers.getValue(XY));
-                    int targetValue = registers.getValue(R);
-                    int compareValue = registers.getRegister_0();
-                    int memAddr = Ins.getAddress_Value();
+                    int R = Ins.getRegister_from_ins();
+                    int XY = Ins.getAddress_Value_from_ins();
+                    memory.set_memory_cells(XY, registers.Get_Register_Value(XY));
+                    int targetValue = registers.Get_Register_Value(R);
+                    int compareValue = registers.Get_Register_Value(0);
+                    int memAddr = Ins.getAddress_Value_from_ins();
                     // Check if the target value equals the value in register 0
                     if (targetValue == compareValue) {
                         ProgramCounter = memAddr; // Set the program counter to the target memory address
                     }
                     cout<<"Program counter now is: "<<hex<<ProgramCounter<<endl;
                 }
-                else if (Ins.getOpCode() == 'C') { // HALT program
-                        cout << "HALT" << endl;
-                        break;
+                else if (Ins.getOpCode_from_ins() == 'C') { // HALT program
+                    cout << "HALT" << endl;
+                    break;
                 }
                 else{
-                        cout << "Unknown operation code: " << Ins.getOpCode() << endl;
-                    }
+                    cout << "Unknown operation code: " << Ins.getOpCode_from_ins() << endl;
                 }
-                cout<<"--------------------------------"<<endl;
-                cout<<"Registers"<<endl;
-                registers.display();
-                cout<<"--------------------------------"<<endl;
-                cout<<"Memory cells"<<endl;
-                memory.display_memory_cells();
-                ProgramFile.close();
-                break;
             }
+            cout<<"--------------------------------"<<endl;
+            cout<<"Registers"<<endl;
+            registers.display_Registers();
+            cout<<"--------------------------------"<<endl;
+            cout<<"Memory cells"<<endl;
+            memory.display_memory_cells();
+            ProgramFile.close();
+            break;
         }
+    }
 }
 void slowPrint(const string& message, int delay) {
     for (char c : message) {
