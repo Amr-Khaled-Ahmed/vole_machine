@@ -7,6 +7,7 @@
 #include <vector>
 #include <iomanip>
 #include <string>
+#include <cctype>
 #include <sstream>
 #include <fstream>
 #include <bitset>
