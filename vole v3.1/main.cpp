@@ -26,7 +26,8 @@ int main() {
                 return 0;
             }
             else if (choice == "1") {
-                start_execution();
+                Simulator s;
+                s.loadProgram();
                 cout << "Choose if you want to continue\n";
             }
             else {
