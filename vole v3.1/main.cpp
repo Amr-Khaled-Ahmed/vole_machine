@@ -13,7 +13,7 @@
 
 int main() {
     // Slow-print a welcome message
-    slowPrint("--\"Welcome to Our Vole Machine\"--", 0);
+    slowPrint("--\"Welcome to Our Vole Machine\"--", 80);
     {
         string choice;
         do {
@@ -23,6 +23,7 @@ int main() {
                  << "Enter your choice:\n";
             cin >> choice;
             if (choice == "2") {
+                slowPrint("***\"Thanks for using out program\"***", 80);
                 return 0;
             }
             else if (choice == "1") {
