@@ -24,7 +24,7 @@ int main() {
             cin >> choice;
             if (choice == "2") {
                 slowPrint("***\"Thanks for using out program\"***", 80);
-                this_thread::sleep_for(chrono::milliseconds(2.5));
+                this_thread::sleep_for(chrono::milliseconds(2));
                 return 0;
             }
             else if (choice == "1") {
