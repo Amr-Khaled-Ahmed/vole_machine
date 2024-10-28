@@ -74,6 +74,5 @@ private:
 
 // Utility functions
 void slowPrint(const string& message, int delay = 50);
-void start_execution();
 
 #endif // VOLE_MACHINE_H
