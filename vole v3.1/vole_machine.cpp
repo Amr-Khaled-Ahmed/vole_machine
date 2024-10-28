@@ -324,7 +324,4 @@ void slowPrint(const string& message, int delay) {
     }
     cout << endl;
 }
-void start_execution() {
-    Simulator s;
-    s.loadProgram();
-}
+
