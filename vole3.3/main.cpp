@@ -13,7 +13,7 @@
 
 int main() {
     // Slow-print a welcome message
-    slowPrint("--\"Welcome to Our Vole Machine\"--", 80);
+    slowPrint("--\"Welcome to Our Vole Machine\"--", 50);
     {
         string choice;
         do {
@@ -23,14 +23,29 @@ int main() {
                  << "Enter your choice:\n";
             cin >> choice;
             if (choice == "2") {
-                slowPrint("***\"Thanks for using out program\"***", 80);
-                this_thread::sleep_for(chrono::milliseconds(2));
+                slowPrint("***\"Thanks for using our program\"***", 50);
+                this_thread::sleep_for(chrono::milliseconds(2000));
                 return 0;
             }
             else if (choice == "1") {
                 Simulator s;
-                s.loadProgram();
-                cout << "Choose if you want to continue\n";
+                do{
+                    cout << "Choose\n"
+                         << "1. To execute line by line" << endl
+                         << "2. To execute the whole program in one step:\n";
+                    cin >> choice;
+                    if (choice == "2") {
+                        s.loadProgram_exe_all();
+                        break;
+                    } else if (choice == "1"){
+                        s.loadProgram_step_by_step();
+                        break;
+
+                    }else {
+                        cerr << "Some thing happen wrong\nPlease choose a right option" << endl;
+                        continue;
+                    }
+                }while (choice != "2" || choice != "1");
             }
             else {
                 cerr << "Some thing happen wrong\nPlease choose a right option" << endl;
