@@ -66,7 +66,8 @@ public:
 class Simulator {
 public:
     Simulator(); // Constructor
-    void loadProgram(); // Load instructions into memory
+    void loadProgram_exe_all(); // Load instructions into memory
+    void loadProgram_step_by_step();
 
 private:
     Memory memory;    // Memory object
