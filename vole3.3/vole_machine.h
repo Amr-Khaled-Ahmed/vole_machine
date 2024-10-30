@@ -2,6 +2,7 @@
 #define VOLE_MACHINE_H
 
 #include <iostream>
+#include <algorithm>
 #include <chrono>
 #include <thread>
 #include <vector>
@@ -13,7 +14,6 @@
 #include <bitset>
 #include<cmath>
 using namespace std;
-
 // Forward declaration of the Registers class
 class Registers;
 // Function to decode the custom hex format to decimal
@@ -33,6 +33,15 @@ public:
     void display_Registers(); // Display register contents
     ~Registers();
 };
+
+// Converte Decimal declaration
+int BintoDec(string bin);
+// Converter Binary declaration 
+string BinaryConv(int number);
+// Convert the +ve or -ve # to Binary declaration
+string TwosComplementConv(int number);
+// Adder for 2`s Complement NO declaration
+string AddBinary(const string &bin1, const string &bin2, bool &ovf);
 
 // Memory class inheriting from Registers
 class Memory { // Inherit from Registers
