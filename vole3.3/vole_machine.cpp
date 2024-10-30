@@ -33,6 +33,85 @@ uint8_t encode_from_decimal(double value) {
 uint8_t addCustomFormat(uint8_t hex1, uint8_t hex2) {
     return decode_to_decimal(hex1)+decode_to_decimal(hex2);
 }
+// these function help in case 5
+int BintoDec(string bin)
+{
+    int dec = 0; // result
+    int len = bin.length(); // size of bits
+    for (int i = 0; i < len; i++) // loop only on 1s and transport it to Decimal NO.
+    {
+        if (bin[len - 1 - i] == '1')
+        {
+            dec += pow(2, i);
+        }
+    }
+
+    return dec;
+}
+
+string BinaryConv(int number)
+{
+    string bin = ""; // result
+    for (int i = 0; i < 8; i++) // store the digits of the Binary in string
+    {
+        bin = ((number & 1) ? '1' : '0') + bin;
+        number >>= 1;
+    }
+    return bin;
+}
+
+string TwosComplementConv(int number)
+{
+    if (number >= 0) // determine if +Ve NO convert to binary direct
+    {
+        return BinaryConv(number);
+    }
+    else // if -Ve NO convert the +Ve NO of it then deal with +Ve version
+    {
+        string bin = BinaryConv(-number);
+        for (char &bit : bin) // convert all 0s to 1s and the opposite
+        {
+            bit = (bit == '0') ? '1' : '0';
+        }
+
+        int cr = 1; // the one will be added to convert the No to 2`s complement
+        for (int i = bin.size() - 1; i >= 0; i--) // loop from first digit to last one to add one
+        {
+            if (bin[i] == '1' && cr == 1)
+            {
+                bin[i] = '0';
+            }
+            else if (cr == 1)
+            {
+                bin[i] = '1';
+                cr = 0;
+            }
+        }
+
+        return bin;
+    }
+}
+
+string AddBinary( string &bin1, string &bin2)
+{
+    // take the 2 string NOs and boolean variable to check if there is overflow
+    string result = "";
+    int carry = 0; // help if was carry one
+
+    for (int i = 7; i >= 0; i--) // loop from the first digit to last
+    {
+        //convert the digits of the two NO
+        int bit1 = bin1[i] - '0';
+        int bit2 = bin2[i] - '0';
+        // add them with carry
+        int sum = bit1 + bit2 + carry;
+        // add the digit of the sum and set if there was carry
+        result = char((sum % 2) + '0') + result;
+        carry = sum / 2;
+    }
+    return result;
+}
+
 // Memory class implementation
 Memory::Memory() : memory(256, 0) {}
 
@@ -188,12 +267,10 @@ void Simulator::loadProgram_exe_all() {
                     int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
                     int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
                     cout << "Ins: 5, Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
-                    int value1 = registers.Get_Register_Value(sourceReg1);
-                    int value2 = registers.Get_Register_Value(sourceReg2);
-                    int result = value1 + value2;
-                    if ((value1 > 0 && value2 > 0 && result < 0) || (value1 < 0 && value2 < 0 && result > 0)) {
-                        cout << "Overflow occurred during addition!" << endl;
-                    }
+                    string value1 = TwosComplementConv(registers.Get_Register_Value(sourceReg1));
+                    string value2 = TwosComplementConv(registers.Get_Register_Value(sourceReg2));
+                    string restr = AddBinary(value1 , value2);
+                    int result = BintoDec(restr);
                     registers.setValue_to_register(destReg, result);
                     cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
                 }
