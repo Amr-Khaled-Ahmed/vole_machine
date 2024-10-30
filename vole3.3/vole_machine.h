@@ -22,6 +22,16 @@ double decode_to_decimal(uint8_t hexValue);
 uint8_t encode_from_decimal(double value);
 // Function to add two values in the custom format and return the result in hex format
 uint8_t addCustomFormat(uint8_t hex1, uint8_t hex2);
+
+// Convert Decimal declaration
+int BintoDec(string bin);
+// Converter Binary declaration
+string BinaryConv(int number);
+// Convert the +ve or -ve # to Binary declaration
+string TwosComplementConv(int number);
+// Adder for 2`s Complement NO declaration
+string AddBinary(const string &bin1, const string &bin2);
+
 // Registers class
 class Registers {
 private:
@@ -33,15 +43,6 @@ public:
     void display_Registers(); // Display register contents
     ~Registers();
 };
-
-// Convert Decimal declaration
-int BintoDec(string bin);
-// Converter Binary declaration 
-string BinaryConv(int number);
-// Convert the +ve or -ve # to Binary declaration
-string TwosComplementConv(int number);
-// Adder for 2`s Complement NO declaration
-string AddBinary(const string &bin1, const string &bin2, bool &ovf);
 
 // Memory class inheriting from Registers
 class Memory { // Inherit from Registers
