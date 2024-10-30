@@ -34,7 +34,7 @@ public:
     ~Registers();
 };
 
-// Converte Decimal declaration
+// Convert Decimal declaration
 int BintoDec(string bin);
 // Converter Binary declaration 
 string BinaryConv(int number);
