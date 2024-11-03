@@ -16,29 +16,35 @@
 using namespace std;
 // Forward declaration of the Registers class
 class Registers;
-// Function to convert a single hex digit to an unsigned char
-unsigned char hexa_char(char hex);
-// Function to convert a hex string to an unsigned char
-unsigned char hexa_unsigned_chars(const string &hex);
-// Function to convert an unsigned char to a hex string
-string char_to_hex(unsigned char value);
-// Decode from custom format to decimal
-double decode_to_decimal(uint8_t hexValue);
-// Encode from decimal to custom format
-uint8_t encode_from_decimal(double value);
-// Normalize the result
-unsigned char Normalize(unsigned char S, unsigned char E, unsigned char M);
-// Function to add two 8-bit floating-point numbers in custom format
-string Add_two_floating_numbers(const string &hex1, const string &hex2);
 
-// Convert Decimal declaration
-int BintoDec(string bin);
-// Converter Binary declaration
-string BinaryConv(int number);
-// Convert the +ve or -ve # to Binary declaration
-string TwosComplementConv(int number);
-// Adder for 2`s Complement NO declaration
-string AddBinary(const string &bin1, const string &bin2);
+class UTL {
+    public:
+    // Function to convert a single hex digit to an unsigned char
+    unsigned char hexa_char(char hex);
+    // Function to convert a hex string to an unsigned char
+    unsigned char hexa_unsigned_chars(const string &hex);
+    // Function to convert an unsigned char to a hex string
+    string char_to_hex(unsigned char value);
+    // Decode from custom format to decimal
+    double decode_to_decimal(uint8_t hexValue);
+    // Encode from decimal to custom format
+    uint8_t encode_from_decimal(double value);
+    // Normalize the result
+    unsigned char Normalize_IEEE(unsigned char S, unsigned char E, unsigned char M);
+    // Function to add two 8-bit floating-point numbers in custom format
+    string Add_two_floating_numbers(const string &hex1, const string &hex2);
+
+    // Convert Decimal declaration
+    int BintoDec(string bin);
+    // Converter Binary declaration
+    string BinaryConv(int number);
+    // Convert the +ve or -ve # to Binary declaration
+    string TwosComplementConv(int number);
+    // Adder for 2`s Complement NO declaration
+    string AddBinary(const string &bin1, const string &bin2);
+    void slowPrint(const string& message, int delay = 50);
+};
+
 
 // Registers class
 class Registers {
@@ -49,7 +55,6 @@ public:
     int Get_Register_Value(int regIndex); // Get value from a register
     void setValue_to_register(int regIndex, int value); // Set value in a register
     void display_Registers(); // Display register contents
-    void clear_register();
     ~Registers();
 };
 
@@ -63,7 +68,6 @@ public:
     int get_memory_address(int memory_address);
     void display_memory_cells();
     int enter_instructions();
-    void clear_memory();
     ~Memory();
 };
 
@@ -95,8 +99,4 @@ private:
     Registers registers; // Registers object
     int ProgramCounter; // Program counter
 };
-
-// Utility functions
-void slowPrint(const string& message, int delay = 50);
-
 #endif // VOLE_MACHINE_H
