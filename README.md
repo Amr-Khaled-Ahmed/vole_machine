@@ -13,21 +13,22 @@ The **Vole Machine Simulator** is a custom virtual machine capable of executing 
   - **Bitwise Operations**: Supports AND, OR, and NOT for binary data manipulation.
   - **Halt**: Cleanly terminates program execution.
 
-## Instruction Set
-| Opcode | Format | Description                                                                                          |
-|--------|--------|------------------------------------------------------------------------------------------------------|
-| `1 RXY`| Load   | Load register `R` with the 8-bit value from memory location `XY`.                                    |
-| `2 RXY`| Load   | Load register `R` with the constant 8-bit value `XY`.                                                |
-| `3 RXY`| Store  | Store the 8-bit value in register `R` to memory location `XY`.                                       |
-| `4 0RS`| Move   | Copy the 8-bit value from register `R` to register `S`.                                              |
-| `5 RST`| Add    | Add the values of registers `S` and `T`, storing the result in register `R`.                         |
-| `6 RST`| FAdd   | Perform floating-point addition of registers `S` and `T`, storing the result in `R`.                 |
-| `7 RST`| Subtract | Subtract the value in register `T` from register `S` and store the result in register `R`.        |
-| `8 RST`| Multiply | Multiply values in registers `S` and `T` and store the result in register `R`.                     |
-| `9 RST`| Divide | Divide the value in register `S` by the value in register `T`, storing the result in register `R`.   |
-| `A RXY`| Compare| Set a flag if register `R` holds a value equal to memory location `XY`; otherwise, clear the flag.   |
-| `B RXY`| Jump   | Jump to the instruction at address `XY` if the value in register `R` equals zero.                    |
-| `C 000`| Halt   | Stop the execution of the simulator.                                                                 |
+# Instruction Set
+
+| Op-Code | Format | Operand | Description                                                                                          |
+|---------|--------|---------|------------------------------------------------------------------------------------------------------|
+| `1`     | Load   | `RXY`   | LOAD the register `R` with the bit pattern found in the memory cell whose address is `XY`. Example: `14A3` would cause the contents of the memory cell located at address `A3` to be placed in register `4`. |
+| `2`     | Load   | `RXY`   | LOAD the register `R` with the bit pattern `XY`. Example: `20A3` would cause the value `A3` to be placed in register `0`. |
+| `3`     | Store  | `RXY`   | STORE the bit pattern in register `R` into the memory cell at address `XY`. Example: `30A3` would store the contents of register `0` into memory cell `A3`. |
+| `4`     | Move   | `0RS`   | MOVE the bit pattern found in register `R` to register `S`. Example: `40A4` would cause the contents of register `A` to be copied into register `4`. |
+| `5`     | Add    | `RST`   | ADD the bit patterns in registers `S` and `T` and place the result in register `R`. Example: `5C4B` would cause the result of adding the contents of registers `C` and `B` to be placed in register `4`. |
+| `6`     | FAdd   | `RST`   | Perform floating-point ADDITION on the values in registers `S` and `T`, storing the result in register `R`. Example: `60C5` would add the floating-point values in registers `C` and `5` and store the result in register `C`. |
+| `7`     | OR     | `RST`   | OR the bit patterns in registers `S` and `T` and place the result in register `R`. Example: `7CB4` would cause the result of ORing the contents of registers `B` and `4` to be placed in register `C`. |
+| `8`     | AND    | `RST`   | AND the bit patterns in registers `S` and `T` and place the result in register `R`. Example: `8045` would cause the result of ANDing the contents of registers `4` and `5` to be placed in register `0`. |
+| `9`     | EXCLUSIVE OR | `RST` | EXCLUSIVE OR the bit patterns in registers `S` and `T` and place the result in register `R`. Example: `95F3` would cause the result of EXCLUSIVE ORing the contents of registers `F` and `3` to be placed in register `5`. |
+| `A`     | Rotate | `R0X`   | ROTATE the bit pattern in register `R` one bit to the right `X` times. Each time, place the bit that started at the low-order end at the high-order end. Example: `A403` would cause the contents of register `4` to be rotated 3 bits to the right in a circular fashion. |
+| `B`     | Jump   | `RXY`   | JUMP to the instruction at address `XY` if the value in register `R` is non-zero. Example: `B0A3` would jump to address `A3` if the contents of register `0` are non-zero. |
+| `C`     | Halt   | `000`   | HALT execution. Example: `C000` would cause program execution to stop. |
 
 
 ## Installation
