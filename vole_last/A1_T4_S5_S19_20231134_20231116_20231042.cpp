@@ -1,7 +1,7 @@
 #include "A1_T4_S5_S19_20231134_20231116_20231042.h"
 
 // Function to convert a single hex digit to an unsigned char
-unsigned char hexa_char(char hex) {
+unsigned char UTL:: hexa_char(char hex) {
     int dec = static_cast<unsigned char>(hex);
     if (dec >= 48 && dec <= 57) {
         char chr = static_cast<char>(dec - 48);
@@ -21,14 +21,14 @@ unsigned char hexa_char(char hex) {
 }
 
 // Function to convert a hex string to an unsigned char
-unsigned char hexa_unsigned_chars(const string &hex) {
+unsigned char UTL:: hexa_unsigned_chars(const string &hex) {
         unsigned char high = hexa_char(hex[0]);
         unsigned char low = hexa_char(hex[1]);
         return (high << 4) | low;
 }
 
 // Function to convert an unsigned char to a hex string
-string char_to_hex(unsigned char value) {
+string UTL:: char_to_hex(unsigned char value) {
     char temporary[3];
     string result;
     char hex_characters[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -50,7 +50,7 @@ string char_to_hex(unsigned char value) {
 }
 
 // Decode from custom format to decimal
-double decode_to_decimal(uint8_t hexValue) {
+double UTL:: decode_to_decimal(uint8_t hexValue) {
     bool sign = (hexValue & 128) >> 7; // 1 if negative, 0 if positive
     int exponent = ((hexValue & 112) >> 4) - 4; // Exponent with bias of 4 removed
     int mantissa = hexValue & 15; // Mantissa is the last 4 bits
@@ -63,7 +63,7 @@ double decode_to_decimal(uint8_t hexValue) {
 }
 
     // Encode from decimal to custom format
-uint8_t encode_from_decimal(double value) {
+uint8_t UTL:: encode_from_decimal(double value) {
     bool sign = value < 0;
     value = abs(value);
     int exponent = 0;
@@ -90,7 +90,7 @@ uint8_t encode_from_decimal(double value) {
 }
 
 // Normalize the result
-unsigned char Normalize(unsigned char S, unsigned char E, unsigned char M) {
+unsigned char UTL:: Normalize_IEEE(unsigned char S, unsigned char E, unsigned char M) {
     // Normalize mantissa
     while (M >= 16) { // Mantissa exceeds 4 bits (1.xxx)
         M >>= 1;        // Shift mantissa right
@@ -104,10 +104,11 @@ unsigned char Normalize(unsigned char S, unsigned char E, unsigned char M) {
 }
 
 // Function to add two 8-bit floating-point numbers in custom format
-string Add_two_floating_numbers(const string &hex1, const string &hex2) {
+string UTL:: Add_two_floating_numbers(const string &hex1, const string &hex2) {
+    UTL ut;
     // Convert hex strings to unsigned char (8 bits)
-    unsigned char num1 = hexa_unsigned_chars(hex1);
-    unsigned char num2 = hexa_unsigned_chars(hex2);
+    unsigned char num1 = ut.hexa_unsigned_chars(hex1);
+    unsigned char num2 = ut.hexa_unsigned_chars(hex2);
 
     // Extract sign, exponent, and mantissa for num1
     unsigned char sin_1 = (num1 >> 7) & 1;
@@ -152,12 +153,12 @@ string Add_two_floating_numbers(const string &hex1, const string &hex2) {
         }
     }
     // Normalize the result
-    unsigned char result = Normalize(sin_1, exp_1, sum_mantesa);
+    unsigned char result = ut.Normalize_IEEE(sin_1, exp_1, sum_mantesa);
     // Convert result to hex string
-    return char_to_hex(result);
+    return ut.char_to_hex(result);
 }
 // these function help in case 5
-int BintoDec(string bin)
+int UTL:: BintoDec(string bin)
 {
     int dec = 0; // result
     int len = bin.length(); // size of bits
@@ -172,7 +173,7 @@ int BintoDec(string bin)
     return dec;
 }
 
-string BinaryConv(int number)
+string UTL:: BinaryConv(int number)
 {
     string bin = ""; // result
     for (int i = 0; i < 8; i++) // store the digits of the Binary in string
@@ -183,7 +184,7 @@ string BinaryConv(int number)
     return bin;
 }
 
-string TwosComplementConv(int number)
+string UTL:: TwosComplementConv(int number)
 {
     if (number >= 0) // determine if +Ve NO convert to binary direct
     {
@@ -215,7 +216,7 @@ string TwosComplementConv(int number)
     }
 }
 
-string AddBinary( string &bin1, string &bin2)
+string UTL::AddBinary(const string &bin1, const string &bin2)
 {
     // take the 2 string NOs and boolean variable to check if there is overflow
     string result = "";
@@ -296,12 +297,11 @@ int Memory::enter_instructions() {
     }
     return start_address;
 }
-void Memory::clear_memory() {
-    for (int i = 0; i < 256; ++i) {
+Memory::~Memory() {
+    for(int i = 0;i<256;i++) {
         memory[i] = 0;
     }
-}
-Memory::~Memory() {} // Destructor class
+} // Destructor class
 
 // Registers class implementation
 Registers::Registers() : registers(16, 0) {}
@@ -325,13 +325,12 @@ void Registers::display_Registers() {
         }
     }
 }
-void Registers::clear_register() {
+
+Registers::~Registers() {
     for (int i = 0; i < 16; ++i) {
         registers[i] = 0;
     }
 }
-
-Registers::~Registers() {}
 
 
 
@@ -361,6 +360,7 @@ ProgIns::~ProgIns() {
 
 Simulator::Simulator() : ProgramCounter(0) {}
 void Simulator::loadProgram_exe_all() {
+    UTL ut;
     string ProgramName; // Variable to hold the user-provided file name
     string extension; // Variable to hold the file extension
     ifstream ProgramFile; // Create an input file stream
@@ -444,10 +444,12 @@ void Simulator::loadProgram_exe_all() {
                     int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
                     int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
                     cout << "Ins: 5, Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
-                    string value1 = TwosComplementConv(registers.Get_Register_Value(sourceReg1));
-                    string value2 = TwosComplementConv(registers.Get_Register_Value(sourceReg2));
-                    string restr = AddBinary(value1 , value2);
-                    int result = BintoDec(restr);
+                    int value1 = registers.Get_Register_Value(sourceReg1);
+                    int value2 = registers.Get_Register_Value(sourceReg2);
+                    int result = value1 + value2;
+                    if ((value1 > 0 && value2 > 0 && result < 0) || (value1 < 0 && value2 < 0 && result > 0)) {
+                        cout << "Overflow occurred during addition!" << endl;
+                    }
                     registers.setValue_to_register(destReg, result);
                     cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
                 }
@@ -459,22 +461,22 @@ void Simulator::loadProgram_exe_all() {
                     int regIndexResult = Ins.getRegister_from_ins();
 
                     // Get the register indexes for the source registers
-                    int regIndexS = hexa_char(Ins.instruction[2]);
-                    int regIndexT = hexa_char(Ins.instruction[3]);
+                    int regIndexS = ut.hexa_char(Ins.instruction[2]);
+                    int regIndexT = ut.hexa_char(Ins.instruction[3]);
 
                     cout << "Ins: 6, Adding values from Register R" << (int)regIndexS << " and Register R" << (int)regIndexT << endl;
 
                     // Get values from registers S&T
-                    string hexValue1 = char_to_hex(registers.Get_Register_Value(regIndexS));
-                    string hexValue2 = char_to_hex(registers.Get_Register_Value(regIndexT));
+                    string hexValue1 = ut.char_to_hex(registers.Get_Register_Value(regIndexS));
+                    string hexValue2 = ut.char_to_hex(registers.Get_Register_Value(regIndexT));
 
                     // Add the two floating-point values
-                    string resultHex = Add_two_floating_numbers(hexValue1, hexValue2);
+                    string resultHex = ut.Add_two_floating_numbers(hexValue1, hexValue2);
 
                     cout << "Result of addition: " << resultHex << endl;
 
                     // Store the result in the target register
-                    uint8_t result = hexa_unsigned_chars(resultHex);
+                    uint8_t result = ut.hexa_unsigned_chars(resultHex);
                     registers.setValue_to_register(regIndexResult, result);
                 }
                 else if (Ins.getOpCode_from_ins() == '7') {
@@ -612,6 +614,7 @@ void Simulator::loadProgram_exe_all() {
 
 
 void Simulator::loadProgram_step_by_step(){
+    UTL ut;
     string ProgramName; // Variable to hold the user-provided file name
     string extension; // Variable to hold the file extension
     ifstream ProgramFile; // Create an input file stream
@@ -729,22 +732,22 @@ void Simulator::loadProgram_step_by_step(){
                     int regIndexResult = Ins.getRegister_from_ins();
 
                     // Get the register indexes for the source registers
-                    int regIndexS = hexa_char(Ins.instruction[2]);
-                    int regIndexT = hexa_char(Ins.instruction[3]);
+                    int regIndexS = ut.hexa_char(Ins.instruction[2]);
+                    int regIndexT = ut.hexa_char(Ins.instruction[3]);
 
                     cout << "Ins: 6, Adding values from Register R" << (int)regIndexS << " and Register R" << (int)regIndexT << endl;
 
                     // Get values from registers S&T
-                    string hexValue1 = char_to_hex(registers.Get_Register_Value(regIndexS));
-                    string hexValue2 = char_to_hex(registers.Get_Register_Value(regIndexT));
+                    string hexValue1 = ut.char_to_hex(registers.Get_Register_Value(regIndexS));
+                    string hexValue2 = ut.char_to_hex(registers.Get_Register_Value(regIndexT));
 
                     // Add the two floating-point values
-                    string resultHex = Add_two_floating_numbers(hexValue1, hexValue2);
+                    string resultHex = ut.Add_two_floating_numbers(hexValue1, hexValue2);
 
                     cout << "Result of addition: " << resultHex << endl;
 
                     // Store the result in the target register
-                    uint8_t result = hexa_unsigned_chars(resultHex);
+                    uint8_t result = ut.hexa_unsigned_chars(resultHex);
                     registers.setValue_to_register(regIndexResult, result);
                 }
                 else if (Ins.getOpCode_from_ins() == '7') {
@@ -885,7 +888,7 @@ void Simulator::loadProgram_step_by_step(){
         }
     }
 }
-void slowPrint(const string& message, int delay) {
+void UTL:: slowPrint(const string& message, int delay) {
     for (char c : message) {
         cout << c;
         cout.flush();
