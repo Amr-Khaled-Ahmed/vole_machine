@@ -13,7 +13,8 @@
 
 int main() {
     // Slow-print a welcome message
-    slowPrint("--\"Welcome to Our Vole Machine\"--", 50);
+    UTL ut;
+    ut.slowPrint("--\"Welcome to Our Vole Machine\"--", 50);
     {
         string choice;
         do {
@@ -23,7 +24,7 @@ int main() {
                  << "Enter your choice:\n";
             cin >> choice;
             if (choice == "2") {
-                slowPrint("***\"Thanks for using our program\"***", 50);
+                ut.slowPrint("***\"Thanks for using our program\"***", 50);
                 this_thread::sleep_for(chrono::milliseconds(2000));
                 return 0;
             }
