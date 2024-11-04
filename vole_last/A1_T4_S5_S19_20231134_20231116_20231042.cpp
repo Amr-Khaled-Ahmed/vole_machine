@@ -31,78 +31,36 @@ unsigned char UTL:: hexa_unsigned_chars(const string &hex) {
 string UTL:: char_to_hex(unsigned char value) {
     char temporary[3];
     string result;
-    char hex_characters[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    char hex_characters[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     for(int index = 0;index<3;index++) {
         if(index==0) {
             temporary[index] = hex_characters[(value >> 4) & 15];
-            result += temporary[index];
+            result = result + temporary[index];
         }
         else if(index==1) {
             temporary[index] = hex_characters[value & 15];
-            result += temporary[index];
+            result = result+ temporary[index];
         }
         else if(index==2) {
             temporary[index] = '\0';
-            result += temporary[index];
+            result = result + temporary[index];
         }
     }
     return result;
 }
-
-// Decode from custom format to decimal
-double UTL:: decode_to_decimal(uint8_t hexValue) {
-    bool sign = (hexValue & 128) >> 7; // 1 if negative, 0 if positive
-    int exponent = ((hexValue & 112) >> 4) - 4; // Exponent with bias of 4 removed
-    int mantissa = hexValue & 15; // Mantissa is the last 4 bits
-    double mantissaValue = mantissa / 16.0; // Convert to fractional part
-    double decimalValue = pow(2, exponent) * mantissaValue;
-    if(sign>0) {
-        decimalValue = -decimalValue;
-    }
-    return decimalValue;
-}
-
-    // Encode from decimal to custom format
-uint8_t UTL:: encode_from_decimal(double value) {
-    bool sign = value < 0;
-    value = abs(value);
-    int exponent = 0;
-
-    // Normalize the value to get the exponent
-    while (value >= 2.0 && exponent < 3) {
-        value /= 2.0;
-        exponent++;
-    }
-    while (value < 1.0 && exponent > -4.0) {
-        value *= 2.0;
-        exponent-=1;
-    }
-    exponent += 4; // Apply bias to exponent
-
-    // Scale value to get the mantissa
-    int mantissa = static_cast<int>(round(value * 16.0)) & 15; // Round for proper mantissa
-
-    // Cap mantissa to avoid overflow
-    if (mantissa > 15) {
-        mantissa = 15;
-    }
-    return (sign << 7) | (exponent << 4) | mantissa;
-}
-
 // Normalize the result
 unsigned char UTL:: Normalize_IEEE(unsigned char S, unsigned char E, unsigned char M) {
     // Normalize mantissa
     while (M >= 16) { // Mantissa exceeds 4 bits (1.xxx)
         M >>= 1;        // Shift mantissa right
-        E+=1;            // Increment exponent
+        E = E+1;            // Increment exponent
     }
     while (M < 8 && E > 0) { // Mantissa less than 1.0 (0.xxx) but E > 0
         M <<= 1;               // Shift mantissa left
-        E-=1;                   // Decrement exponent
+        E = E-1;                   // Decrement exponent
     }
     return (S << 7) | (E << 4) | (M & 15);
 }
-
 // Function to add two 8-bit floating-point numbers in custom format
 string UTL:: Add_two_floating_numbers(const string &hex1, const string &hex2) {
     UTL ut;
@@ -121,14 +79,17 @@ string UTL:: Add_two_floating_numbers(const string &hex1, const string &hex2) {
     unsigned char mant_2 = num2 & 15;
 
     // Normalize the exponents
-    while(true) {
+    bool temp = true;
+    while(temp == true) {
         if (exp_2 > exp_1) {
             swap(sin_1, sin_2);
             swap(exp_1, exp_2);
             swap(mant_1, mant_2);
+            temp = false;
             break;
         }
         else {
+            temp = false;
             break;
         }
     }
