@@ -444,12 +444,10 @@ void Simulator::loadProgram_exe_all() {
                     int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
                     int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
                     cout << "Ins: 5, Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
-                    int value1 = registers.Get_Register_Value(sourceReg1);
-                    int value2 = registers.Get_Register_Value(sourceReg2);
-                    int result = value1 + value2;
-                    if ((value1 > 0 && value2 > 0 && result < 0) || (value1 < 0 && value2 < 0 && result > 0)) {
-                        cout << "Overflow occurred during addition!" << endl;
-                    }
+                    string value1 = ut.TwosComplementConv(registers.Get_Register_Value(sourceReg1));
+                    string value2 = ut.TwosComplementConv(registers.Get_Register_Value(sourceReg2));
+                    string restr = ut.AddBinary(value1 , value2);
+                    int result = ut.BintoDec(restr);
                     registers.setValue_to_register(destReg, result);
                     cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
                 }
@@ -711,19 +709,17 @@ void Simulator::loadProgram_step_by_step(){
                     /*ADD the bit patterns in registers S and T as though they were two’s complement representations
                       and leave the result in register R.
                     */
-                    int sourceReg1 = stoi(string(1, Ins.instruction[2]), nullptr, 16);
-                    int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
-                    int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
-                    cout << "Ins: 5, Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
-                    int value1 = registers.Get_Register_Value(sourceReg1);
-                    int value2 = registers.Get_Register_Value(sourceReg2);
-                    int result = value1 + value2;
-                    if ((value1 > 0 && value2 > 0 && result < 0) || (value1 < 0 && value2 < 0 && result > 0)) {
-                        cout << "Overflow occurred during addition!" << endl;
+                        int sourceReg1 = stoi(string(1, Ins.instruction[2]), nullptr, 16);
+                        int sourceReg2 = stoi(string(1, Ins.instruction[3]), nullptr, 16);
+                        int destReg = stoi(string(1, Ins.instruction[1]), nullptr, 16);
+                        cout << "Ins: 5, Adding values from Register R" << sourceReg1 << " and Register R" << sourceReg2 << endl;
+                        string value1 = ut.TwosComplementConv(registers.Get_Register_Value(sourceReg1));
+                        string value2 = ut.TwosComplementConv(registers.Get_Register_Value(sourceReg2));
+                        string restr = ut.AddBinary(value1 , value2);
+                        int result = ut.BintoDec(restr);
+                        registers.setValue_to_register(destReg, result);
+                        cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
                     }
-                    registers.setValue_to_register(destReg, result);
-                    cout << "Result of addition: " << result << " stored in Register R" << destReg << endl;
-                }
                 else if (Ins.getOpCode_from_ins() == '6') {
                     /*
                      ADD the bit patterns in registers S and T as though they represented values in floating-point
