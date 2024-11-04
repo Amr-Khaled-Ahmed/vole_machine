@@ -25,10 +25,6 @@ class UTL {
     unsigned char hexa_unsigned_chars(const string &hex);
     // Function to convert an unsigned char to a hex string
     string char_to_hex(unsigned char value);
-    // Decode from custom format to decimal
-    double decode_to_decimal(uint8_t hexValue);
-    // Encode from decimal to custom format
-    uint8_t encode_from_decimal(double value);
     // Normalize the result
     unsigned char Normalize_IEEE(unsigned char S, unsigned char E, unsigned char M);
     // Function to add two 8-bit floating-point numbers in custom format
