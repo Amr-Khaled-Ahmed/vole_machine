@@ -385,6 +385,8 @@ void Simulator::loadProgram_exe_all() {
                     // Check if the address is 00 (special case for screen)
                     if (XY == 0) {
                         cout << "Ins: 3, Writing value " << hex << valueToStore << " to screen." << endl;
+                        char x = static_cast<char>(valueToStore);
+                        cout << "Ins: 3, Writing value in ASCII: " << x << " to screen." << endl;
                     }
                     else {
                         // Store the value in the specified memory address
@@ -654,6 +656,8 @@ void Simulator::loadProgram_step_by_step(){
                     // Check if the address is 00 (special case for screen)
                     if (XY == 0) {
                         cout << "Ins: 3, Writing value " << hex << valueToStore << " to screen." << endl;
+                        char x = static_cast<char>(valueToStore);
+                        cout << "Ins: 3, Writing value in ASCII: " << x << " to screen." << endl;
                     }
                     else {
                         // Store the value in the specified memory address
